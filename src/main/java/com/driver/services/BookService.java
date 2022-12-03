@@ -15,7 +15,7 @@ public class BookService {
     BookRepository bookRepository2;
 
     public void createBook(Book book){
-
+        book.setAvailable(true);
         bookRepository2.save(book);
     }
 

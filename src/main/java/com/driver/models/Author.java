@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @AllArgsConstructor
-//@NoArgsConstructor
+@NoArgsConstructor
 public class Author {
 
     @Id
@@ -29,9 +29,9 @@ public class Author {
     @JsonIgnoreProperties("author")
     private List<Book> booksWritten;
 
-    public Author() {
-
-    }
+//    public Author() {
+//
+//    }
 
 }
 
