@@ -30,7 +30,7 @@ public class StudentService {
 
     public Student getDetailsById(int id){
         Student student = studentRepository4.findById(id).orElse(null);
-        log.info(student.toString());
+//        log.info(student.toString());
         return student;
     }
 
@@ -39,6 +39,7 @@ public class StudentService {
     }
 
     public void updateStudent(Student student){
+
         int i = studentRepository4.updateStudentDetails(student);
         log.info("rows affected = " + i);
     }
