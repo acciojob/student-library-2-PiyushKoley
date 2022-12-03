@@ -3,6 +3,7 @@ package com.driver.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @Data
+
 public class Student {
 
     @Id
@@ -41,6 +43,13 @@ public class Student {
 
     @UpdateTimestamp
     private Date updatedOn;
+
+    public Student(String emailId, String name, int age, String country) {
+        this.emailId = emailId;
+        this.name = name;
+        this.age = age;
+        this.country = country;
+    }
 
     @Override
     public String toString() {

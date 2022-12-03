@@ -44,8 +44,12 @@ public class Book {
     @JsonIgnoreProperties("book")
     private List<Transaction> transactions;
 
-//    public Book() {
-//        this.available=true;
-//    }
+    public Book(String name, Genre genre, Author author) {
+        this.name = name;
+        this.genre = genre;
+        this.author = author;
+    }
+
+
 }
 
