@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @AllArgsConstructor
-
+//@NoArgsConstructor
 public class Author {
 
     @Id
@@ -30,6 +30,7 @@ public class Author {
     private List<Book> booksWritten;
 
     public Author() {
+
     }
 
 }

@@ -41,6 +41,7 @@ public class Book {
     private List<Transaction> transactions;
 
     public Book() {
+        this.available=true;
     }
 }
 
