@@ -29,7 +29,7 @@ public class BookService {
         else if(genre != null && available == false && author != null){ // genre,author and unavailable...
             books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
         }
-        else if(genre==null  && author ==  null){
+        else if(genre==null  && available == true && author ==  null){
             books = bookRepository2.findByAvailability(available);
         }
         return books;
