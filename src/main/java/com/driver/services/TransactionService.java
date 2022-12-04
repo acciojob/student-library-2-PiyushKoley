@@ -45,9 +45,11 @@ public class TransactionService {
         Book book = bookRepository5.findById(bookId).orElse(null);
         Card card = cardRepository5.findById(cardId).orElse(null);
         Transaction transaction = null;
+        boolean flag = false;
 
         try {
             if (book == null || book.isAvailable() == false) {
+                flag = true;
                 throw new Exception("Book is either unavailable or not present");
             }
 
@@ -57,6 +59,7 @@ public class TransactionService {
 
 
             if (card == null || card.getCardStatus().toString().equals("DEACTIVATED")) {
+                flag  = true;
                 throw new Exception("Card is invalid");
             }
 
@@ -64,6 +67,7 @@ public class TransactionService {
             // If it fails: throw new Exception("Book limit has reached for this card");
 
             if (card.getBooks().size() >= max_allowed_books) {
+                flag = true;
                 throw new Exception("Book limit has reached for this card");
             }
         }
@@ -75,30 +79,32 @@ public class TransactionService {
                                         .book(book)
                                     .build();
 
-            transaction = transactionRepository5.save(transaction);
-//            return transaction.getTransactionId();
+
              throw new Exception(e);
 
         }
 
-        //If the transaction is successful, save the transaction to the list of transactions and return the id
-        book.setAvailable(false);
-        book.setCard(card);
-        bookRepository5.updateBook(book);
-         transaction = Transaction.builder()
-                                    .book(book)
-                                    .card(card)
-                                    .transactionStatus(TransactionStatus.SUCCESSFUL)
-                                    .isIssueOperation(true)
-                                .build();
+        finally {
+            //If the transaction is successful, save the transaction to the list of transactions and return the id
+           if(!flag) {
+               book.setAvailable(false);
+               book.setCard(card);
+               bookRepository5.updateBook(book);
+               transaction = Transaction.builder()
+                       .book(book)
+                       .card(card)
+                       .transactionStatus(TransactionStatus.SUCCESSFUL)
+                       .isIssueOperation(true)
+                       .build();
+           }
+
+            transaction = transactionRepository5.save(transaction);
 
 
-        transaction = transactionRepository5.save(transaction);
+            //Note that the error message should match exactly in all cases
 
-
-        //Note that the error message should match exactly in all cases
-
-       return transaction.getTransactionId(); //return transactionId instead
+            return transaction.getTransactionId(); //return transactionId instead
+        }
 
     }
 
