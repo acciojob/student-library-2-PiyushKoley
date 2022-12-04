@@ -113,21 +113,34 @@ public class TransactionService {
         List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
         Transaction transaction = transactions.get(transactions.size() - 1);
 
+        Book book = transaction.getBook();
+        Card card = transaction.getCard();
+
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
         Date issueDate = transaction.getTransactionDate();
-        Transaction newTransaction = Transaction.builder().build();
 
+        Transaction newTransaction = Transaction.builder()
+                .isIssueOperation(false)
+                .transactionStatus(TransactionStatus.SUCCESSFUL)
+                .card(card)
+                .book(book)
+                .build();
+
+
+        newTransaction = transactionRepository5.save(newTransaction);
 
         //make the book available for other users
 
-        Book book = transaction.getBook();
+
         book.setCard(null);
         book.setAvailable(true);
         bookRepository5.updateBook(book);
 
         //make a new transaction for return book which contains the fine amount as well
 
-        Transaction returnBookTransaction  = null;
-        return returnBookTransaction; //return the transaction after updating all details
+//        Transaction returnBookTransaction  = null;
+
+
+        return newTransaction; //return the transaction after updating all details
     }
 }
