@@ -32,9 +32,9 @@ public class BookService {
         else if(genre==null  && available == true && author ==  null){
             books = bookRepository2.findByAvailability(available);
         }
-        else if(genre !=null && available && author != null) {
-            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        }
+//        else if(genre !=null && available && author != null) {
+//            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+//        }
         return books;
     }
 }
