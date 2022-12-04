@@ -54,7 +54,7 @@ public class TransactionService {
 
         Card card = cardRepository5.findById(cardId).orElse(null);
 
-        if(card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)) {
+        if(card == null || card.getCardStatus().toString().equals("DEACTIVATED")) {
             throw new Exception("Card is invalid");
         }
 
