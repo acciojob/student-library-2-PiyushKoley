@@ -43,38 +43,55 @@ public class TransactionService {
         // If it fails: throw new Exception("Book is either unavailable or not present");
 
         Book book = bookRepository5.findById(bookId).orElse(null);
-
-        if(book == null || book.isAvailable() == false){
-            throw new Exception("Book is either unavailable or not present");
-        }
-
-
-        //2. card is present and activated
-        // If it fails: throw new Exception("Card is invalid");
-
         Card card = cardRepository5.findById(cardId).orElse(null);
+        Transaction transaction = null;
 
-        if(card == null || card.getCardStatus().toString().equals("DEACTIVATED")) {
-            throw new Exception("Card is invalid");
+        try {
+            if (book == null || book.isAvailable() == false) {
+                throw new Exception("Book is either unavailable or not present");
+            }
+
+
+            //2. card is present and activated
+            // If it fails: throw new Exception("Card is invalid");
+
+
+            if (card == null || card.getCardStatus().toString().equals("DEACTIVATED")) {
+                throw new Exception("Card is invalid");
+            }
+
+            //3. number of books issued against the card is strictly less than max_allowed_books
+            // If it fails: throw new Exception("Book limit has reached for this card");
+
+            if (card.getBooks().size() >= max_allowed_books) {
+                throw new Exception("Book limit has reached for this card");
+            }
         }
+        catch (Exception e) {
+             transaction = Transaction.builder()
+                                        .transactionStatus(TransactionStatus.FAILED)
+                                        .isIssueOperation(true)
+                                        .card(card)
+                                        .book(book)
+                                    .build();
 
-        //3. number of books issued against the card is strictly less than max_allowed_books
-        // If it fails: throw new Exception("Book limit has reached for this card");
+            transaction = transactionRepository5.save(transaction);
+//            return transaction.getTransactionId();
+             throw new Exception(e);
 
-        if(card.getBooks().size() >= max_allowed_books) {
-            throw new Exception("Book limit has reached for this card");
         }
 
         //If the transaction is successful, save the transaction to the list of transactions and return the id
         book.setAvailable(false);
         book.setCard(card);
         bookRepository5.updateBook(book);
-        Transaction transaction = Transaction.builder()
+         transaction = Transaction.builder()
                                     .book(book)
                                     .card(card)
                                     .transactionStatus(TransactionStatus.SUCCESSFUL)
                                     .isIssueOperation(true)
                                 .build();
+
 
         transaction = transactionRepository5.save(transaction);
 
@@ -82,6 +99,7 @@ public class TransactionService {
         //Note that the error message should match exactly in all cases
 
        return transaction.getTransactionId(); //return transactionId instead
+
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
