@@ -146,8 +146,7 @@ public class TransactionService {
         book.setCard(null);
         book.setAvailable(true);
 
-        List<Book> books = card.getBooks();
-        books.remove(book);
+
 
         bookRepository5.updateBook(book);
 
